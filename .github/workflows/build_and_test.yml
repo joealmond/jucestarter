@@ -121,25 +121,28 @@ jobs:
           7z x pluginval_${{ runner.os }}.zip
           ${{ matrix.pluginval-binary }} --strictness-level 10 --verbose --validate "${{ env.VST3_PATH }}"
 
-      - name: Import Certificates (macOS)
-        uses: sudara/basic-macos-keychain-action@v1
-        id: keychain
-        if: ${{ runner.os == 'macOS'}}
-        with:
-          dev-id-app-cert: ${{ secrets.DEV_ID_APP_CERT }}
-          dev-id-app-password: ${{ secrets.DEV_ID_APP_PASSWORD }}
-          dev-id-installer-cert: ${{ secrets.DEV_ID_INSTALLER_CERT }}
-          dev-id-installer-password: ${{ secrets.DEV_ID_INSTALLER_PASSWORD }}
+      # CODE SIGNING (macOS): The two steps below handle certificate import and code signing.
+      # To restore code signing, uncomment them and ensure the required secrets are configured.
+      # See: https://melatonin.dev/manuals/pamplejuce/getting-started/code-signing/
+      # - name: Import Certificates (macOS)
+      #   uses: sudara/basic-macos-keychain-action@v1
+      #   id: keychain
+      #   if: ${{ runner.os == 'macOS'}}
+      #   with:
+      #     dev-id-app-cert: ${{ secrets.DEV_ID_APP_CERT }}
+      #     dev-id-app-password: ${{ secrets.DEV_ID_APP_PASSWORD }}
+      #     dev-id-installer-cert: ${{ secrets.DEV_ID_INSTALLER_CERT }}
+      #     dev-id-installer-password: ${{ secrets.DEV_ID_INSTALLER_PASSWORD }}
 
-      - name: Codesign (macOS)
-        if: ${{ runner.os == 'macOS' }}
-        timeout-minutes: 5
-        run: |
-          # Each plugin must be code signed
-          codesign --force --keychain ${{ steps.keychain.outputs.keychain-path }} -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.VST3_PATH }}" --deep --strict --options=runtime --timestamp
-          codesign --force --keychain ${{ steps.keychain.outputs.keychain-path }} -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.AU_PATH }}" --deep --strict --options=runtime --timestamp
-          codesign --force --keychain ${{ steps.keychain.outputs.keychain-path }} -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.CLAP_PATH }}" --deep --strict --options=runtime --timestamp
-          codesign --force --keychain ${{ steps.keychain.outputs.keychain-path }} -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.STANDALONE_PATH }}" --deep --strict --options=runtime --timestamp
+      # - name: Codesign (macOS)
+      #   if: ${{ runner.os == 'macOS' }}
+      #   timeout-minutes: 5
+      #   run: |
+      #     # Each plugin must be code signed
+      #     codesign --force --keychain ${{ steps.keychain.outputs.keychain-path }} -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.VST3_PATH }}" --deep --strict --options=runtime --timestamp
+      #     codesign --force --keychain ${{ steps.keychain.outputs.keychain-path }} -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.AU_PATH }}" --deep --strict --options=runtime --timestamp
+      #     codesign --force --keychain ${{ steps.keychain.outputs.keychain-path }} -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.CLAP_PATH }}" --deep --strict --options=runtime --timestamp
+      #     codesign --force --keychain ${{ steps.keychain.outputs.keychain-path }} -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.STANDALONE_PATH }}" --deep --strict --options=runtime --timestamp
 
       - name: Add Custom Icons (macOS)
         if: ${{ runner.os == 'macOS' }}
@@ -160,7 +163,7 @@ jobs:
           SetFile -a C "${{ env.AU_PATH }}"
           SetFile -a C "${{ env.CLAP_PATH }}"
 
-      - name: pkgbuild, Productbuild and Notarize
+      - name: pkgbuild and Productbuild (macOS)
         if: ${{ runner.os == 'macOS' }}
         timeout-minutes: 5
         run: |
@@ -175,10 +178,13 @@ jobs:
 
           cd packaging
           envsubst < distribution.xml.template > distribution.xml
-          productbuild --resources ./resources --distribution distribution.xml --sign "${{ secrets.DEVELOPER_ID_INSTALLER }}" --timestamp "${{ env.ARTIFACT_NAME }}.pkg"
-
-          xcrun notarytool submit "${{ env.ARTIFACT_NAME }}.pkg" --apple-id ${{ secrets.NOTARIZATION_USERNAME }} --password ${{ secrets.NOTARIZATION_PASSWORD }} --team-id ${{ secrets.TEAM_ID }} --wait
-          xcrun stapler staple "${{ env.ARTIFACT_NAME }}.pkg"
+          # CODE SIGNING (macOS): To restore installer signing, notarization and stapling, replace the
+          # productbuild line below with the commented-out version and uncomment the xcrun lines.
+          # See: https://melatonin.dev/manuals/pamplejuce/getting-started/code-signing/
+          # productbuild --resources ./resources --distribution distribution.xml --sign "${{ secrets.DEVELOPER_ID_INSTALLER }}" --timestamp "${{ env.ARTIFACT_NAME }}.pkg"
+          # xcrun notarytool submit "${{ env.ARTIFACT_NAME }}.pkg" --apple-id ${{ secrets.NOTARIZATION_USERNAME }} --password ${{ secrets.NOTARIZATION_PASSWORD }} --team-id ${{ secrets.TEAM_ID }} --wait
+          # xcrun stapler staple "${{ env.ARTIFACT_NAME }}.pkg"
+          productbuild --resources ./resources --distribution distribution.xml "${{ env.ARTIFACT_NAME }}.pkg"
 
       - name: Zip
         if: ${{ runner.os == 'Linux' }}
@@ -191,31 +197,34 @@ jobs:
           iscc "packaging\installer.iss"
           mv "packaging/Output/${{ env.ARTIFACT_NAME }}.exe" "${{ env.ARTIFACTS_PATH }}/"
 
-      - name: Codesign with Azure Trusted Signing
-        if: ${{ runner.os == 'Windows' }}
-        uses: azure/trusted-signing-action@v0.5.11
-        with:
-          # The Azure Active Directory tenant (directory) ID.
-          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-
-          # The client (application) ID of an App Registration in the tenant.
-          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-
-          # A client secret that was generated for the App Registration.
-          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-
-          # The Code Signing Account endpoint. The URI value must have a URI that aligns to the region your Code Signing Account and Certificate Profile you are specifying were created in during the setup of these resources.
-          endpoint: ${{ secrets.AZURE_ENDPOINT }}
-
-          # The Code Signing Account name.
-          trusted-signing-account-name: ${{ secrets.AZURE_CODE_SIGNING_NAME }}
-
-          # The Certificate Profile name.
-          certificate-profile-name: ${{ secrets.AZURE_CERT_PROFILE_NAME }}
-
-          # This signs all exes inside the folder
-          files-folder: ${{ env.ARTIFACTS_PATH }}
-          files-folder-filter: exe
+      # CODE SIGNING (Windows): To restore Azure Trusted Signing, uncomment the step below
+      # and ensure the required secrets are configured.
+      # See: https://melatonin.dev/manuals/pamplejuce/getting-started/code-signing/
+      # - name: Codesign with Azure Trusted Signing
+      #   if: ${{ runner.os == 'Windows' }}
+      #   uses: azure/trusted-signing-action@v0.5.11
+      #   with:
+      #     # The Azure Active Directory tenant (directory) ID.
+      #     azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+      #
+      #     # The client (application) ID of an App Registration in the tenant.
+      #     azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+      #
+      #     # A client secret that was generated for the App Registration.
+      #     azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+      #
+      #     # The Code Signing Account endpoint. The URI value must have a URI that aligns to the region your Code Signing Account and Certificate Profile you are specifying were created in during the setup of these resources.
+      #     endpoint: ${{ secrets.AZURE_ENDPOINT }}
+      #
+      #     # The Code Signing Account name.
+      #     trusted-signing-account-name: ${{ secrets.AZURE_CODE_SIGNING_NAME }}
+      #
+      #     # The Certificate Profile name.
+      #     certificate-profile-name: ${{ secrets.AZURE_CERT_PROFILE_NAME }}
+      #
+      #     # This signs all exes inside the folder
+      #     files-folder: ${{ env.ARTIFACTS_PATH }}
+      #     files-folder-filter: exe
 
       - name: Upload Exe (Windows)
         if: ${{ runner.os == 'Windows' }}
