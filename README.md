@@ -175,6 +175,7 @@ cmake -B Builds -G Xcode
 - **[JUCE Documentation](https://docs.juce.com/master/)** — framework API reference
 - **[JUCE CMake API](https://github.com/juce-framework/JUCE/blob/master/docs/CMake%20API.md)** — all plugin config options
 - **[docs/tech-stack.md](docs/tech-stack.md)** — project-specific versions, build commands, setup guides
+- **[AAX Plugin Support](docs/know-how/aax-plugin-support.md)** — Pro Tools AAX format: SDK setup, PACE signing, CI integration
 
 ---
 

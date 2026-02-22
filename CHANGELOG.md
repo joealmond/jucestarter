@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- `docs/know-how/aax-plugin-support.md` — comprehensive AAX (Pro Tools) support guide covering SDK setup, CMake config, PACE signing, CI integration, and licensing
+- AAX guide link in README Documentation section
+
+### Added
 
 **Beginner-Friendly Template**
 - `README.md` — complete rewrite with 5-minute quickstart, platform-specific setup (collapsible), customization table, project structure map, and useful commands reference
