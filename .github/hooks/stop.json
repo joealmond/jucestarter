@@ -1,0 +1,11 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "type": "command",
+        "command": "./scripts/autodoc-check.sh",
+        "timeout": 10
+      }
+    ]
+  }
+}

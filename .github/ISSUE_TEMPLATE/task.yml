@@ -1,0 +1,98 @@
+name: Task
+description: Create a new task for the project
+title: "[Task]: "
+labels: ["task"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What
+      description: What needs to be done? Be specific — this is the only required field.
+      placeholder: Describe the task clearly so an AI agent or human can pick it up...
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: Why does this matter? What problem does it solve?
+      placeholder: Explain the motivation...
+    validations:
+      required: false
+  - type: textarea
+    id: done-when
+    attributes:
+      label: Done When
+      description: Acceptance criteria (checklist)
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+        - [ ] CHANGELOG.md updated
+    validations:
+      required: false
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - high
+        - medium
+        - low
+    validations:
+      required: false
+  - type: dropdown
+    id: size
+    attributes:
+      label: Size
+      options:
+        - XS
+        - S
+        - M
+        - L
+        - XL
+    validations:
+      required: false
+
+  # --- Agent Configuration (for Copilot coding agent) ---
+
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Agent
+      description: Which agent should handle this? Maps to .github/agents/*.agent.md
+      options:
+        - coder
+        - planner
+        - reviewer
+    validations:
+      required: false
+  - type: input
+    id: mcp-servers
+    attributes:
+      label: MCP Servers
+      description: Comma-separated MCP servers the agent should use
+      placeholder: "e.g. github, fetch, filesystem"
+    validations:
+      required: false
+  - type: input
+    id: tools
+    attributes:
+      label: Tools / Skills
+      description: Specific tools or capabilities the agent needs
+      placeholder: "e.g. editFiles, runInTerminal, search, read, fetch"
+    validations:
+      required: false
+  - type: textarea
+    id: agent-instructions
+    attributes:
+      label: Agent Instructions
+      description: Extra instructions for the AI agent working on this task
+      placeholder: "e.g. Use TDD approach, don't modify public API, run tests before submitting..."
+    validations:
+      required: false
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Any extra context, links, or constraints
+      placeholder: Optional...
