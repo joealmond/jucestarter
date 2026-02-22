@@ -5,8 +5,18 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- `build.ps1` — one-command PowerShell build script for Windows (`build.ps1`, `build.ps1 test`, `build.ps1 release`, `build.ps1 clean`) mirroring `build.sh`
+- `build.ps1` auto-detects Visual Studio's bundled CMake, Ninja, and MSVC compiler via `vswhere.exe` + `vcvarsall.bat` — no manual PATH setup required
+- `build.ps1` gracefully handles VST3 copy-after-build permission errors (needs admin to install to Program Files)
+- `docs/know-how/windows-toolchain-path.md` — explains Windows PATH issues, MSVC environment setup, CMake 4.x Ninja bug, and VST3 permissions
 - `docs/know-how/aax-plugin-support.md` — comprehensive AAX (Pro Tools) support guide covering SDK setup, CMake config, PACE signing, CI integration, and licensing
 - AAX guide link in README Documentation section
+
+### Changed
+- `build.ps1` uses "Ninja Multi-Config" generator — CMake 4.x (bundled with VS 2022) has a bug with the single-config Ninja generator that puts unresolved `$BuildType` variables in rule names
+- `.vscode/settings.json` — switched generator to "Ninja Multi-Config" and `CMAKE_DEFAULT_BUILD_TYPE` for CMake 4.x compatibility
+- `README.md` — added Windows build commands (build.ps1) alongside macOS/Linux, Windows standalone run command, updated project structure and useful commands
+- `docs/tech-stack.md` — added Windows VS Code extensions, build.ps1 commands, and Windows standalone run command
 
 ### Added
 

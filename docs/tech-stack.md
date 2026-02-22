@@ -78,6 +78,18 @@ brew install cmake ninja
 - CMake (bundled with VS2022, or install separately)
 - Ninja (`choco install ninja`)
 
+**VS Code extensions (recommended):**
+- CMake Tools (`ms-vscode.cmake-tools`) — configure/build/debug from VS Code
+- C/C++ (`ms-vscode.cpptools`) — IntelliSense and debugging
+
+**Build:**
+```powershell
+.\build.ps1              # Debug build
+.\build.ps1 release      # Release build
+.\build.ps1 test         # Build + run tests
+.\build.ps1 clean        # Remove build artifacts
+```
+
 ### Linux (Ubuntu/Debian)
 
 **Prerequisites:**
@@ -112,6 +124,9 @@ cmake --build Builds --config Release
 
 # Run the Standalone plugin (macOS)
 open Builds/Pamplejuce_artefacts/Debug/Standalone/Pamplejuce\ Demo.app
+
+# Run the Standalone plugin (Windows)
+& ".\Builds\Pamplejuce_artefacts\Debug\Standalone\Pamplejuce Demo.exe"
 ```
 
 ## Platform Notes

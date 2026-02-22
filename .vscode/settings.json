@@ -2,11 +2,15 @@
     // CMake Tools — auto-configure on open
     "cmake.configureOnOpen": true,
     "cmake.buildDirectory": "${workspaceFolder}/Builds",
-    "cmake.generator": "Ninja",
+
+    // Generator: "Ninja" on macOS/Linux, "Ninja Multi-Config" on Windows
+    // CMake 4.x (bundled with VS 2022) has a bug with the single-config Ninja
+    // generator — use Multi-Config on Windows. See docs/know-how/windows-toolchain-path.md
+    "cmake.generator": "Ninja Multi-Config",
 
     // Default build type for local development
     "cmake.configureSettings": {
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_DEFAULT_BUILD_TYPE": "Debug"
     },
 
     // Recommended: use compile_commands.json for IntelliSense

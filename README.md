@@ -56,9 +56,15 @@ git submodule update --init --recursive
 
 **Option A — One command:**
 ```bash
+# macOS / Linux
 ./build.sh          # Debug build
 ./build.sh test     # Debug + run tests
 ./build.sh release  # Release build
+
+# Windows (PowerShell)
+.\build.ps1          # Debug build
+.\build.ps1 test     # Debug + run tests
+.\build.ps1 release  # Release build
 ```
 
 **Option B — Manual CMake:**
@@ -72,6 +78,9 @@ cmake --build Builds --config Debug
 ```bash
 # Standalone app (macOS)
 open Builds/Pamplejuce_artefacts/Debug/Standalone/*.app
+
+# Standalone app (Windows)
+& ".\Builds\Pamplejuce_artefacts\Debug\Standalone\Pamplejuce Demo.exe"
 
 # Or open in your DAW — plugins auto-install to system folders
 ```
@@ -126,7 +135,8 @@ cmake/                  CMake helpers (git submodule)
 packaging/              Installers, signing, icons
 docs/                   Architecture docs, know-how, tech stack
 .github/                CI/CD, AI agent config, skills
-build.sh                One-command build script
+build.sh                One-command build script (macOS/Linux)
+build.ps1               One-command build script (Windows)
 VERSION                 Semantic version (read by CMake)
 ```
 
@@ -152,18 +162,29 @@ VERSION                 Semantic version (read by CMake)
 
 ## Useful Commands
 
+**macOS / Linux:**
 ```bash
 ./build.sh              # Build Debug
 ./build.sh release      # Build Release
 ./build.sh test         # Build + run tests
 ./build.sh clean        # Remove build artifacts
+```
 
-# Or use CMake directly:
+**Windows (PowerShell):**
+```powershell
+.\build.ps1              # Build Debug
+.\build.ps1 release      # Build Release
+.\build.ps1 test         # Build + run tests
+.\build.ps1 clean        # Remove build artifacts
+```
+
+**Manual CMake (any platform):**
+```bash
 cmake -B Builds -G Ninja -DCMAKE_BUILD_TYPE=Debug
 cmake --build Builds --config Debug
 cd Builds && ctest --verbose --output-on-failure
 
-# Generate Xcode project:
+# Generate Xcode project (macOS):
 cmake -B Builds -G Xcode
 ```
 
