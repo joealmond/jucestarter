@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+**Agents**
+- `.github/agents/audio-dev.agent.md` — audio DSP development specialist agent
+
+**Skills**
+- `.github/skills/build/` — build the plugin locally (configure, compile, test)
+- `.github/skills/add-dsp/` — add DSP processing to the plugin with JUCE patterns
+- `.github/skills/add-parameter/` — add automatable parameters using APVTS
+- `.github/skills/extend-agent/` — self-improve agentic capabilities
+
+**Prompts**
+- `.github/prompts/build.prompt.md` — `/build` slash command
+- `.github/prompts/extend-agent.prompt.md` — `/extend-agent` slash command
+
+**Instructions**
+- `.github/instructions/cmake.instructions.md` — auto-applied CMake file rules
+- `.github/instructions/juce-cpp.instructions.md` — auto-applied JUCE C++ source rules
+
+**Knowledge Base**
+- `docs/tech-stack.md` — complete tech stack with JUCE, CMake, C++23 versions and doc links
+- `docs/know-how/pamplejuce-build-system.md` — Pamplejuce build system architecture
+- `docs/know-how/juce-plugin-architecture.md` — JUCE plugin patterns and real-time rules
+
+### Changed
+- `AGENTS.md` — added JUCE/Pamplejuce context, project structure, audio domain rules, and self-improvement section reminding LLMs to extend their own capabilities through agents, skills, prompts, and instructions
+
 ## [1.0.0] — 2026-02-22
 
 ### Added

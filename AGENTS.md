@@ -31,24 +31,46 @@ This context is what makes the difference between a useful response and a generi
 | Tech Stack | `docs/tech-stack.md` | Installed versions + doc links — prevents version mismatch bugs |
 | Future | `ROADMAP.md` | Non-actionable ideas — so agents don't work against the vision |
 
+## This Is a JUCE Audio Plugin (Pamplejuce Template)
+
+This project is a **C++23 JUCE audio plugin** based on the [Pamplejuce](https://melatonin.dev/manuals/pamplejuce/) template. Key facts:
+
+- **Framework:** JUCE (develop branch, git submodule)
+- **Build system:** CMake 3.25+ with modular helpers in `cmake/` (submodule: `sudara/cmake-includes`)
+- **Plugin formats:** VST3, AU, AUv3, CLAP, Standalone
+- **Source:** `source/PluginProcessor.cpp` (audio/DSP) + `source/PluginEditor.cpp` (GUI)
+- **Testing:** Catch2 (via CPM) + pluginval in CI
+- **CI/CD:** GitHub Actions — builds on macOS, Windows, Linux with sccache
+- **Submodules:** JUCE, cmake-includes, clap-juce-extensions, melatonin_inspector
+- **Init:** `git submodule update --init --recursive` (recursive is required for CLAP)
+
+Read `docs/tech-stack.md` for full details, build commands, and doc links.
+Read `docs/know-how/pamplejuce-build-system.md` and `docs/know-how/juce-plugin-architecture.md` for critical patterns.
+
 ## Project Structure
 
 ```
 .github/
-  agents/           — AI personas (planner, coder, reviewer)
-  prompts/          — Slash commands (/new-task, /done)
-  instructions/     — File-pattern rules (auto-applied by glob)
+  agents/           — AI personas (planner, coder, reviewer, audio-dev)
+  prompts/          — Slash commands (/new-task, /done, /build, /extend-agent)
+  instructions/     — File-pattern rules (auto-applied by glob: changelog, docs, cmake, juce-cpp)
   hooks/            — Lifecycle automation (stop → check docs)
-  skills/           — Portable skills (learn, adr, onboard)
+  skills/           — Portable skills (learn, adr, onboard, build, add-dsp, add-parameter, extend-agent)
   ISSUE_TEMPLATE/   — GitHub Issue templates (task, bug)
+source/             — Plugin source code (PluginProcessor + PluginEditor)
+JUCE/               — JUCE framework (git submodule, develop branch)
+modules/            — External modules (clap-juce-extensions, melatonin_inspector)
+cmake/              — CMake helpers (git submodule: sudara/cmake-includes)
+tests/              — Catch2 tests
+benchmarks/         — Catch2 benchmarks
+packaging/          — Installers, code signing, icons
 docs/
   architecture/     — ADRs (Architecture Decision Records)
   know-how/         — Learned knowledge (grows over time)
-templates/          — tech-stack.md reference template
-scripts/            — Automation (doc-check)
-README-Autodocs.md  — Autodocs documentation
+  tech-stack.md     — Installed versions + doc links + build commands
 CHANGELOG.md        — Universal history bridge (repo root)
 AGENTS.md           — All project rules (this file)
+VERSION             — Semver version (read by CMake)
 ```
 
 ## Core Workflow
@@ -104,3 +126,38 @@ AI training data goes stale. Library APIs change between versions. **Never assum
 - Don't create giant files — split at 200 lines.
 - Don't skip tests when they exist.
 - Don't duplicate task tracking — use GitHub Issues, not local files.
+- Don't allocate or lock inside `processBlock()` — it's a real-time audio thread.
+- Don't change parameter IDs after release — it breaks user presets.
+
+## Self-Improvement — Extend Your Own Capabilities
+
+**When you discover gaps in your skills, prompts, instructions, or know-how — fix them.**
+
+AI agents should actively improve the project's agentic infrastructure. After completing tasks, consider:
+
+- **Did you learn something non-obvious?** → Add a `docs/know-how/` entry (use the `learn` skill)
+- **Is there a repeatable workflow you just did?** → Create a new skill in `.github/skills/`
+- **Would a slash command help the user next time?** → Add a prompt in `.github/prompts/`
+- **Are there file-specific rules worth encoding?** → Add an instruction in `.github/instructions/`
+- **Does a new domain need a specialist?** → Add an agent persona in `.github/agents/`
+- **Should a universal rule change?** → Update this file (`AGENTS.md`)
+
+Use the `extend-agent` skill (`.github/skills/extend-agent/SKILL.md`) for guidance on what to create and where.
+
+**The goal: every session should leave the project smarter for the next session.**
+
+## Audio Plugin Domain Rules
+
+These rules are specific to this JUCE audio plugin project:
+
+- **Read `docs/tech-stack.md`** before any build or code change — it has build commands, versions, and links.
+- **Read `docs/know-how/juce-plugin-architecture.md`** before modifying PluginProcessor or PluginEditor.
+- **`processBlock()` is sacred** — real-time safe only. No allocations, locks, I/O, or exceptions.
+- **Use APVTS** (AudioProcessorValueTreeState) for all user-facing parameters.
+- **Parameter IDs are forever** — never rename them after a plugin has been released.
+- **Use `juce::SmoothedValue`** for any parameter that controls audio to prevent clicks.
+- **SharedCode is INTERFACE** — link new modules to it (not the plugin target directly).
+- **Submodules need recursive init** — `git submodule update --init --recursive`.
+- **JUCE docs:** https://docs.juce.com/master/ — always verify APIs against actual docs.
+- **Pamplejuce manual:** https://melatonin.dev/manuals/pamplejuce/ — build system and CI reference.
+
