@@ -57,8 +57,10 @@ curl -sL https://raw.githubusercontent.com/joealmond/autodocs/main/ROADMAP.md -o
   skills/           — 3 portable skills (learn, adr, onboard)
   ISSUE_TEMPLATE/   — Task & bug forms with agent config fields
 docs/
+  autodocs/         — Autodocs template reference docs (not project-specific)
+    know-how/       — Autodocs-specific knowledge and best practices
   architecture/     — ADRs (Architecture Decision Records)
-  know-how/         — Lessons learned (grows over time)
+  know-how/         — Project-specific lessons learned (grows over time)
 templates/          — tech-stack.md reference template
 scripts/            — autodoc-check.sh
 README-Autodocs.md  — This file (autodocs documentation)

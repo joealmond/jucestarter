@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- `docs/autodocs/` — separated autodocs template reference docs from project docs (mirroring joealmond/autodocs PR #2)
+- `docs/autodocs/README.md` — explains the separation between template docs and project docs
 - `build.ps1` — one-command PowerShell build script for Windows (`build.ps1`, `build.ps1 test`, `build.ps1 release`, `build.ps1 clean`) mirroring `build.sh`
 - `build.ps1` auto-detects Visual Studio's bundled CMake, Ninja, and MSVC compiler via `vswhere.exe` + `vcvarsall.bat` — no manual PATH setup required
 - `build.ps1` gracefully handles VST3 copy-after-build permission errors (needs admin to install to Program Files)

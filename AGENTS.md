@@ -9,11 +9,12 @@ AI agents have no memory between sessions. Without context, every conversation s
 Before working on any task, **gather context first** so you can serve the user's intent meaningfully:
 
 1. `CHANGELOG.md` — what happened recently, what was already tried
-2. `docs/know-how/` — past lessons that prevent re-learning the hard way
-3. `docs/architecture/` — design constraints that shouldn't be violated
-4. `docs/tech-stack.md` — installed versions and doc links, so you don't guess APIs
-5. `ROADMAP.md` — future direction, so your work aligns with it
-6. GitHub Issues — the current task backlog and priorities
+2. `docs/autodocs/` — autodocs template reference docs (how the system works)
+3. `docs/know-how/` — project-specific lessons that prevent re-learning the hard way
+4. `docs/architecture/` — design constraints that shouldn't be violated
+5. `docs/tech-stack.md` — installed versions and doc links, so you don't guess APIs
+6. `ROADMAP.md` — future direction, so your work aligns with it
+7. GitHub Issues — the current task backlog and priorities
 
 **Never assume library APIs.** Your training data may be outdated. Always check the official docs for the installed version — see `docs/tech-stack.md` for links. When unsure about anything, ask the user rather than guessing.
 
@@ -26,7 +27,8 @@ This context is what makes the difference between a useful response and a generi
 | Rules | `AGENTS.md` | The single rulebook — read it before doing anything |
 | Tasks | GitHub Issues | Single source of truth, assignable to humans or Copilot |
 | History | `CHANGELOG.md` | Universal bridge — readable by all agents, local and remote |
-| Knowledge | `docs/know-how/` | Prevents repeating mistakes across sessions |
+| Autodocs Ref | `docs/autodocs/` | Template reference docs — not project-specific |
+| Knowledge | `docs/know-how/` | Project-specific lessons — prevents repeating mistakes |
 | Architecture | `docs/architecture/` | Design constraints that outlive any single task |
 | Tech Stack | `docs/tech-stack.md` | Installed versions + doc links — prevents version mismatch bugs |
 | Future | `ROADMAP.md` | Non-actionable ideas — so agents don't work against the vision |
@@ -65,8 +67,10 @@ tests/              — Catch2 tests
 benchmarks/         — Catch2 benchmarks
 packaging/          — Installers, code signing, icons
 docs/
+  autodocs/         — Autodocs template reference docs (not project-specific)
+    know-how/       — Autodocs-specific knowledge and best practices
   architecture/     — ADRs (Architecture Decision Records)
-  know-how/         — Learned knowledge (grows over time)
+  know-how/         — Project-specific lessons learned (grows over time)
   tech-stack.md     — Installed versions + doc links + build commands
 CHANGELOG.md        — Universal history bridge (repo root)
 AGENTS.md           — All project rules (this file)

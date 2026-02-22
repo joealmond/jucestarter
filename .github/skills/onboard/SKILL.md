@@ -15,8 +15,9 @@ AI agents have no memory between sessions. This skill reads the key project file
 2. Read `ROADMAP.md` (if it exists) — future direction, so your work aligns
 3. Read `docs/tech-stack.md` (if it exists) — installed versions and doc links
 4. Scan `docs/know-how/` — list available entries, read any relevant to the current task
-5. Scan `docs/architecture/` — list ADRs, read any relevant to the current task
-6. Check GitHub Issues (if GitHub MCP is available) — open issues, recent PRs
+5. Scan `docs/autodocs/` — autodocs template reference docs (how the system works)
+6. Scan `docs/architecture/` — list ADRs, read any relevant to the current task
+7. Check GitHub Issues (if GitHub MCP is available) — open issues, recent PRs
 
 ## Output
 

@@ -1,6 +1,8 @@
 # Know-How: Project Knowledge Base
 
-This folder contains **lessons learned** — things we discovered while building the project that aren't obvious from the code alone.
+This folder contains **lessons learned** — things discovered while building your project that aren't obvious from the code alone.
+
+> **Looking for autodocs reference docs?** See [`docs/autodocs/know-how/`](../autodocs/know-how/) for knowledge about the autodocs system itself (coding agent sandbox, GitHub Issues workflow, etc.).
 
 ## How It Works
 
