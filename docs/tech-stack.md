@@ -51,31 +51,71 @@
 | `cmake/GitHubENV.cmake` | Exports config for CI env vars |
 | `cmake/XcodePrettify.cmake` | Xcode project organization |
 
+## Initial Setup by Platform
+
+### macOS (Intel or Apple Silicon)
+
+**Prerequisites:**
+```bash
+# 1. Install Xcode Command Line Tools (provides Clang compiler)
+xcode-select --install
+
+# 2. Install Homebrew (if not already) — https://brew.sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# 3. Install CMake and Ninja
+brew install cmake ninja
+```
+
+**VS Code extensions (recommended):**
+- CMake Tools (`ms-vscode.cmake-tools`) — configure/build/debug from VS Code
+- C/C++ (`ms-vscode.cpptools`) — IntelliSense and debugging
+
+### Windows
+
+**Prerequisites:**
+- Visual Studio 2022 (Community is free) with "Desktop development with C++" workload
+- CMake (bundled with VS2022, or install separately)
+- Ninja (`choco install ninja`)
+
+### Linux (Ubuntu/Debian)
+
+**Prerequisites:**
+```bash
+sudo apt update && sudo apt install -y \
+  build-essential cmake ninja-build \
+  libasound2-dev libx11-dev libxinerama-dev libxext-dev \
+  libfreetype6-dev libwebkit2gtk-4.1-dev libglu1-mesa-dev
+```
+
 ## Build Commands
 
 ```bash
-# First time setup
+# First time setup — recursive is required (CLAP has nested submodules)
 git submodule update --init --recursive
 
-# Configure (Ninja — fast)
+# Configure (Ninja — fast, recommended for local dev)
 cmake -B Builds -G Ninja -DCMAKE_BUILD_TYPE=Debug
 
-# Configure (Xcode project)
+# Configure (Xcode project — for Xcode IDE users)
 cmake -B Builds -G Xcode
 
 # Build
 cmake --build Builds --config Debug
 
-# Run tests
+# Run tests + benchmarks
 cd Builds && ctest --verbose --output-on-failure
 
 # Build Release
 cmake -B Builds -DCMAKE_BUILD_TYPE=Release
 cmake --build Builds --config Release
+
+# Run the Standalone plugin (macOS)
+open Builds/Pamplejuce_artefacts/Debug/Standalone/Pamplejuce\ Demo.app
 ```
 
 ## Platform Notes
 
-- **macOS:** Universal binaries (arm64 + x86_64) in CI. Ninja or Xcode generator.
+- **macOS:** Universal binaries (arm64 + x86_64) in CI. Ninja or Xcode generator. Plugins auto-install to `~/Library/Audio/Plug-Ins/`.
 - **Windows:** MSVC with sccache. Ninja generator. IPP via NuGet.
 - **Linux:** Clang compiler. Ninja generator. IPP via Intel repo. Needs X11/ALSA deps.

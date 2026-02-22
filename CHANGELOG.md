@@ -30,6 +30,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - `AGENTS.md` — added JUCE/Pamplejuce context, project structure, audio domain rules, and self-improvement section reminding LLMs to extend their own capabilities through agents, skills, prompts, and instructions
+- `docs/tech-stack.md` — added "Initial Setup by Platform" section with per-OS prerequisites (macOS, Windows, Linux), VS Code extensions, and standalone launch command
 
 ## [1.0.0] — 2026-02-22
 
