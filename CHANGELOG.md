@@ -15,6 +15,11 @@ All notable changes to this project will be documented in this file.
 - AAX guide link in README Documentation section
 
 ### Changed
+- Moved 4 autodocs template know-how files from `docs/know-how/` → `docs/autodocs/know-how/` (`coding-agent-sandbox.md`, `github-issues-workflow.md`, `instruction-files.md`, `working-with-libraries.md`)
+- `docs/know-how/README.md` — clarified as project-specific, added pointer to autodocs reference
+- `AGENTS.md` — updated context-gathering list, "Where Things Live" table, and project structure to include `docs/autodocs/`
+- `README-Autodocs.md` — updated structure diagram with `docs/autodocs/` directory
+- `.github/skills/onboard/SKILL.md` — added `docs/autodocs/` to context-gathering steps
 - `build.ps1` uses "Ninja Multi-Config" generator — CMake 4.x (bundled with VS 2022) has a bug with the single-config Ninja generator that puts unresolved `$BuildType` variables in rule names
 - `.vscode/settings.json` — switched generator to "Ninja Multi-Config" and `CMAKE_DEFAULT_BUILD_TYPE` for CMake 4.x compatibility
 - `README.md` — added Windows build commands (build.ps1) alongside macOS/Linux, Windows standalone run command, updated project structure and useful commands
