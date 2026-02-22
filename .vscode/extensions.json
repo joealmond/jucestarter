@@ -1,0 +1,7 @@
+{
+    // Recommended extensions for this JUCE/CMake project
+    "recommendations": [
+        "ms-vscode.cmake-tools",
+        "ms-vscode.cpptools"
+    ]
+}

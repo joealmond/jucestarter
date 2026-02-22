@@ -1,0 +1,35 @@
+{
+    // CMake Tools — auto-configure on open
+    "cmake.configureOnOpen": true,
+    "cmake.buildDirectory": "${workspaceFolder}/Builds",
+    "cmake.generator": "Ninja",
+
+    // Default build type for local development
+    "cmake.configureSettings": {
+        "CMAKE_BUILD_TYPE": "Debug"
+    },
+
+    // Recommended: use compile_commands.json for IntelliSense
+    "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+
+    // File associations
+    "files.associations": {
+        "*.h": "cpp",
+        "*.cpp": "cpp"
+    },
+
+    // Hide noisy build artifacts from the explorer
+    "files.exclude": {
+        "Builds": true,
+        "**/.DS_Store": true,
+        "cmake-build-*": true
+    },
+
+    // Search: skip build output and submodule internals
+    "search.exclude": {
+        "Builds": true,
+        "JUCE": true,
+        "modules/clap-juce-extensions/clap-libs": true
+    }
+}

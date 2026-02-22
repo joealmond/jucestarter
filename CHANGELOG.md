@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+**Beginner-Friendly Template**
+- `README.md` — complete rewrite with 5-minute quickstart, platform-specific setup (collapsible), customization table, project structure map, and useful commands reference
+- `build.sh` — one-command build script (`./build.sh`, `./build.sh test`, `./build.sh release`, `./build.sh clean`) with dependency checking and submodule auto-init
+- `.vscode/settings.json` — pre-configured CMake Tools integration (auto-configure, Ninja generator, IntelliSense, search exclusions for build/submodule dirs)
+- `.vscode/extensions.json` — recommended extensions prompt (CMake Tools, C/C++)
+
 **Agents**
 - `.github/agents/audio-dev.agent.md` — audio DSP development specialist agent
 
@@ -31,6 +37,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - `AGENTS.md` — added JUCE/Pamplejuce context, project structure, audio domain rules, and self-improvement section reminding LLMs to extend their own capabilities through agents, skills, prompts, and instructions
 - `docs/tech-stack.md` — added "Initial Setup by Platform" section with per-OS prerequisites (macOS, Windows, Linux), VS Code extensions, and standalone launch command
+- `CMakeLists.txt` — reorganized with clear boxed customization section at top, simplified verbose comments, removed redundant "Change me!" markers, added section headers
 
 ## [1.0.0] — 2026-02-22
 

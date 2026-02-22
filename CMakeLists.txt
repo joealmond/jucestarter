@@ -13,28 +13,23 @@ include(PamplejuceMacOS)
 # Couple tweaks that IMO should be JUCE defaults
 include(JUCEDefaults)
 
-# Change me!
-# This is the internal name of the project and the name of JUCE's shared code target
-# Note: This cannot have spaces (it may be 2024, but you can't have it all!)
-# Worry not, JUCE's PRODUCT_NAME can have spaces (and is what DAWs display)
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  CUSTOMIZE YOUR PLUGIN HERE — edit these 5 variables             ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+# Internal name (no spaces). Used as the CMake target name.
 set(PROJECT_NAME "Pamplejuce")
 
-# Worry not, JUCE's PRODUCT_NAME can have spaces (and is what DAWs will display)
-# You can also just have it be the same thing as PROJECT_NAME
-# You may want to append the major version on the end of this (and PROJECT_NAME) ala:
-#   set(PROJECT_NAME "MyPlugin_v${MAJOR_VERSION}")
-# Doing so enables major versions to show up in IDEs and DAWs as separate plugins
-# allowing you to change parameters and behavior without breaking existing user projects
+# Display name shown in DAWs (spaces are OK here).
 set(PRODUCT_NAME "Pamplejuce Demo")
 
-# Change me! Used for the MacOS bundle name and Installers
+# Your company/brand name. Used in macOS bundle and installers.
 set(COMPANY_NAME "Pamplejuce Company")
 
-# Change me! Used for the MacOS bundle identifier (and signing)
+# macOS bundle identifier (reverse domain). Used for signing.
 set(BUNDLE_ID "com.pamplejuce.pamplejuce")
 
-# Change me! Set the plugin formats you want built
-# Valid choices: AAX Unity VST VST3 AU AUv3 Standalone
+# Plugin formats to build. Valid: AAX Unity VST VST3 AU AUv3 Standalone
 set(FORMATS Standalone AU VST3 AUv3)
 
 # Force JUCE to work with sccache
@@ -60,33 +55,22 @@ add_subdirectory(modules/clap-juce-extensions EXCLUDE_FROM_ALL)
 # This adds the melatonin inspector module
 add_subdirectory (modules/melatonin_inspector)
 
-# See `docs/CMake API.md` in the JUCE repo for all config options
+# See JUCE/docs/CMake API.md for all available options
 juce_add_plugin("${PROJECT_NAME}"
-    # Icons for the standalone app
     ICON_BIG "${CMAKE_CURRENT_SOURCE_DIR}/packaging/icon.png"
-
-    # Change me!
     COMPANY_NAME "${COMPANY_NAME}"
     BUNDLE_ID "${BUNDLE_ID}"
 
-    # On MacOS, plugin is copied to /Users/yourname/Library/Audio/Plug-Ins/
+    # Auto-install built plugins to ~/Library/Audio/Plug-Ins/ (macOS)
     COPY_PLUGIN_AFTER_BUILD TRUE
 
-    # Change me!
-    # A four-character plugin id
-    # First character MUST be uppercase for AU formats
+    # 4-char manufacturer code (first char MUST be uppercase for AU)
     PLUGIN_MANUFACTURER_CODE Pamp
 
-    # Change me!
-    # A unique four-character plugin id
-    # Note: this must have at least one upper-case character
+    # 4-char unique plugin code (at least one uppercase letter)
     PLUGIN_CODE P001
-    FORMATS "${FORMATS}"
 
-    # The name of your final executable
-    # This is how it's listed in the DAW
-    # This can be different from PROJECT_NAME and can have spaces!
-    # You might want to use v${MAJOR_VERSION} here once you go to v2...
+    FORMATS "${FORMATS}"
     PRODUCT_NAME "${PRODUCT_NAME}")
 
 # This lets us use our code in both the JUCE targets and our Test target
@@ -97,15 +81,11 @@ clap_juce_extensions_plugin(TARGET "${PROJECT_NAME}"
     CLAP_ID "${BUNDLE_ID}"
     CLAP_FEATURES audio-effect)
 
-# Enable fast math, C++20 and a few other target defaults
+# C++23, fast math, compiler tweaks
 include(SharedCodeDefaults)
 
 
-# Manually list all .h and .cpp files for the plugin
-# If you are like me, you'll use globs for your sanity.
-# Just ensure you employ CONFIGURE_DEPENDS so the build system picks up changes
-# If you want to appease the CMake gods and avoid globs, manually add files like so:
-# set(SourceFiles Source/PluginEditor.h Source/PluginProcessor.h Source/PluginEditor.cpp Source/PluginProcessor.cpp)
+# Auto-detect all source files in source/ (add new .cpp/.h files and they'll be picked up)
 file(GLOB_RECURSE SourceFiles CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/source/*.h")
 target_sources(SharedCode INTERFACE ${SourceFiles})
 
@@ -135,11 +115,7 @@ target_compile_definitions(SharedCode
     PRODUCT_NAME_WITHOUT_VERSION="Pamplejuce"
 )
 
-# Link to any other modules you added (with juce_add_module) here!
-# Usually JUCE modules must have PRIVATE visibility
-# See https://github.com/juce-framework/JUCE/blob/master/docs/CMake%20API.md#juce_add_module
-# However, with Pamplejuce, you'll link modules to SharedCode with INTERFACE visibility
-# This allows the JUCE plugin targets and the Tests target to link against it
+# Link JUCE modules to SharedCode (use INTERFACE so tests also get them)
 target_link_libraries(SharedCode
     INTERFACE
     Assets
